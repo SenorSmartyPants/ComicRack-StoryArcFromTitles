@@ -30,7 +30,7 @@ def SingleStoryArcFromTitleArray(titleArray):
 
 
 
-def ProcessAlternateSeries(book,storyarc,overwrite):
+def ProcessAlternateSeries(book,storyarc,overwrite,field):
 	# if there is an alternate series and it is the same as the storyarc name, set alternate series number
 	# find number after the groupkeyword, chapter/part number
 	lstoryarc = storyarc.lower()
@@ -39,16 +39,33 @@ def ProcessAlternateSeries(book,storyarc,overwrite):
 	else:
 		lAlternateSeries = ""
 	#MessageBox.Show(lAlternateSeries.find(lstoryarc).ToString())
-	if lAlternateSeries.find(lstoryarc) != -1 and lstoryarc != lAlternateSeries:
-		RemoveStoryArcFromAlternateSeries(book,storyarc,overwrite)
-	if lstoryarc != lAlternateSeries:
-		if overwrite or book.StoryArc == "":
-			if len(storyarc) > 0:
-				book.StoryArc = storyarc
+	if field == "Story Arc":
+		if lAlternateSeries.find(lstoryarc) != -1 and lstoryarc != lAlternateSeries:
+			# story arc found in alt series, but there's more than just the SA in AS
+			RemoveStoryArcFromAlternateSeries(book,storyarc,overwrite)
+		if lstoryarc != lAlternateSeries:
+			if overwrite or book.StoryArc == "":
+				if len(storyarc) > 0:
+					book.StoryArc = storyarc
+		else:
+			#don't put found story arc in storyarc field since it is really an alternate series
+			#TODO: check title again for another story arc?
+			AlternateSeriesNumberHandling(book,storyarc,overwrite)
 	else:
-		#don't put found story arc in storyarc field since it is really an alternate series
-		#TODO: check title again for another story arc?
-		AlternateSeriesNumberHandling(book,storyarc,overwrite)
+		#save the found story arc in AlternateSeries
+		#possibilities
+		# SA IN AS // do nothing
+		# overwrite or empty AS //set and process number
+		if overwrite or book.AlternateSeries == "":
+			if len(storyarc) > 0:
+				book.AlternateSeries = storyarc
+		elif lAlternateSeries.find(lstoryarc) == -1:
+			# SA not in AS (not empty) // add to AS, no number
+			book.AlternateSeries = book.AlternateSeries + ', ' + storyarc
+
+		# SA == AS // process number
+		if len(storyarc) > 0 and storyarc == book.AlternateSeries:
+			AlternateSeriesNumberHandling(book,storyarc,overwrite)
 
 #end ProcessAlternateSeries
 

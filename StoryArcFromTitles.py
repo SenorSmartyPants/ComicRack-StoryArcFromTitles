@@ -26,6 +26,8 @@ from titleparsing import *
 #@Image StoryArcFromTitles.png
 #@Key StoryArcFromTitles
 def StoryArcFromTitles(books):
+	global settings
+	settings = LoadSettings()
 	#test to make sure there is more than one book
 	if len(books) == 0:
 		MessageBox.Show("You must select at least 1 book to run this script", "Story Arc From Titles", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -49,7 +51,7 @@ def StoryArcFromTitles(books):
 				SingleStoryArcFromTitles(books)
 
 def SingleStoryArcFromTitles(books):
-
+	global settings
 	titleArray = makeTitleArray(books)
 	storyarc = SingleStoryArcFromTitleArray(titleArray)
 	
@@ -68,12 +70,12 @@ def SingleStoryArcFromTitles(books):
 		#overwrite if checked or number is empty
 		if result != 0:
 			for book in books:		
-				ProcessAlternateSeries(book,storyarc,result == 2)
+				ProcessAlternateSeries(book,storyarc,result == 2, settings["field"])
 #end SingleStoryArcFromTitles
 
 
 def MultipleStoryArcsFromTitles(books,method_selected):
-
+	global settings
 	titleArray = makeTitleArray(books)
 
 
@@ -105,7 +107,7 @@ def MultipleStoryArcsFromTitles(books,method_selected):
 				if inv.has_key(book.Title):
 					storyarc = inv[book.Title]
 
-				ProcessAlternateSeries(book,storyarc,result == 2)
+				ProcessAlternateSeries(book,storyarc,result == 2, settings["field"])
 #end MultipleStoryArcsFromTitles
 
 #Some important constants
