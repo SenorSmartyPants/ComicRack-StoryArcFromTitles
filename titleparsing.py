@@ -57,12 +57,6 @@ def RemoveStoryArcFromAlternateSeries(book,storyarc,overwrite):
 	#story arc could be one of several in AlternateSeries
 	if overwrite:
 		book.AlternateSeries = book.AlternateSeries.replace(storyarc,"").strip(' ,-(:;')
-		
-		
-		
-		#MessageBox.Show(re.sub(re.compile(re.escape(storyarc),re.I),"",book.AlternateSeries,0))
-		
-	#MessageBox.Show(book.AlternateSeries)
 #end RemoveStoryArcFromAlternateSeries
 	
 def AlternateSeriesNumberHandling(book,storyarc,overwrite):
