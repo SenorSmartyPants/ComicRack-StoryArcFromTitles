@@ -34,18 +34,18 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build
         run: |
-          zip -r ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin * -x "*.git*" *.md      
+          zip -r ${{ env.plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin * -x "*.git*" *.md      
 
       # Runs a set of commands using the runners shell
       - name: Test
         run: |
-          unzip -vl ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
+          unzip -vl ${{ env.plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
           echo ${{ github.workflow }}
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
+          files: ${{ env.plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}         
