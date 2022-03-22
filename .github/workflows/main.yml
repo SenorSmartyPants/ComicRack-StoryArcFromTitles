@@ -16,6 +16,8 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+      plugin-name: StoryArcFromTitles
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -32,18 +34,18 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build
         run: |
-          zip -r MarkScannerPage-${{ steps.get_version.outputs.VERSION }}.crplugin * -x "*.git*" *.md      
+          zip -r ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin * -x "*.git*" *.md      
 
       # Runs a set of commands using the runners shell
       - name: Test
         run: |
-          unzip -vl MarkScannerPage-${{ steps.get_version.outputs.VERSION }}.crplugin
+          unzip -vl ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
           echo ${{ github.workflow }}
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: MarkScannerPage-${{ steps.get_version.outputs.VERSION }}.crplugin
+          files: ${{ plugin-name }}-${{ steps.get_version.outputs.VERSION }}.crplugin
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}         
