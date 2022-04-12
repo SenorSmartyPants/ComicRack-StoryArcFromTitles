@@ -77,8 +77,6 @@ def SingleStoryArcFromTitles(books):
 def MultipleStoryArcsFromTitles(books,method_selected):
 	global settings
 	titleArray = makeTitleArray(books)
-
-
 	storyarcs = prefix_groups(titleArray,method_selected)
 
 	if storyarcs:

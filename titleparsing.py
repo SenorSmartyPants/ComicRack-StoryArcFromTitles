@@ -272,7 +272,6 @@ def prefix_groups(data,method):
 		del groups[NoStoryArcKey]
 	return groups
 
-
 def formatDict(dictionary):
 	output = ""
 	for k, v in dictionary.items():
@@ -282,8 +281,6 @@ def formatDict(dictionary):
 		output += "\n"
 	
 	return output
-
-	
 	
 def removeGroupKeywords(s):
 	processedString = s
@@ -303,7 +300,6 @@ def removePart(s,keyword):
 		NoPart = s
 	return NoPart
 
-	
 def removeGroupKeywordsAndAfter(s):
 	processedString = s
 	if s is not None:
@@ -323,7 +319,6 @@ def removePartAndAfter(s,keyword):
 		NoPart = s
 	return NoPart
 
-	
 def storyArc_cleanup(storyarc):
 	#print "StoryArc before clean up == |" + storyarc + "|"
 	#clean up possible StoryArc 
