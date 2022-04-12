@@ -53,7 +53,7 @@ def StoryArcFromTitles(books):
 def SingleStoryArcFromTitles(books):
 	global settings
 	titleArray = makeTitleArray(books)
-	storyarc = SingleStoryArcFromTitleArray(titleArray)
+	storyarc = SingleStoryArcFromTitleArray(titleArray, len(books))
 	
 	if len(storyarc) == 0:
 		MessageBox.Show("No Story Arcs detected.", "Story Arc From Titles", MessageBoxButtons.OK, MessageBoxIcon.Warning)

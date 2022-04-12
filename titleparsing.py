@@ -21,9 +21,9 @@ def getGroupKeywords():
 
 	return GroupKeywords
 
-def SingleStoryArcFromTitleArray(titleArray):
+def SingleStoryArcFromTitleArray(titleArray, bookCount):
 	#test based on number of books selected
-	if len(titleArray) > 1:
+	if bookCount > 1:
 		#more than 1 book
 		storyarc = long_substr(titleArray)
 	else:
@@ -261,7 +261,7 @@ def prefix_groups(data,method):
 			#groups[NoStoryArcKey].append(first)
 			
 			#TODO: do single title check for possible story arc
-			single = SingleStoryArcFromTitleArray([first])
+			single = SingleStoryArcFromTitleArray([first], 1)
 			if len(single) == 0:
 				groups[NoStoryArcKey].append(first)
 			else:
