@@ -2,13 +2,24 @@
 # 
 # You are free to modify and distribute this file
 ##########################################################################
-	
-GroupKeywords = ["Part","Chapter",": ","Pt.","Pt","Prelude","Conclusion"]
-
 NoStoryArcKey = "---***No Story Arc Found***---"
 StoryArcMinimumLength = 6 # seems to be off by one... 
 SingleStoryArcMinimumLength = 2
 
+import config
+
+def getGroupKeywords():
+	#global config.settings = config.LoadSettings()
+	
+	#TODO option to not split on colon
+	# option to strip 'The' from detected story arc
+	GroupKeywords = ["Part","Chapter","Pt.","Pt","Prelude","Conclusion"]
+	GroupKeywordColon = ": "
+
+	if config.settings["GroupKeywordColon"] == 'True':
+		GroupKeywords.append(GroupKeywordColon)
+
+	return GroupKeywords
 
 def SingleStoryArcFromTitleArray(titleArray):
 	#test based on number of books selected
@@ -91,7 +102,7 @@ def AlternateSeriesNumberHandling(book,storyarc,overwrite):
 		PartNumber = book.Title.replace(storyarc,"").strip().lstrip(',-(:;').strip()
 		#MessageBox.Show(PartNumber)
 		#remove group keyword, if it exists find first word after it. 
-		for Part in GroupKeywords:
+		for Part in getGroupKeywords():
 			PartNumber = PartNumber.replace("(" + Part, " ")
 			PartNumber = PartNumber.replace(Part, " ")
 		#take first word left, use that as part number
@@ -272,7 +283,7 @@ def formatDict(dictionary):
 	
 def removeGroupKeywords(s):
 	processedString = s
-	for Part in GroupKeywords:
+	for Part in getGroupKeywords():
 		processedString = removePart(processedString,Part)
 	return processedString
 	
@@ -292,7 +303,7 @@ def removePart(s,keyword):
 def removeGroupKeywordsAndAfter(s):
 	processedString = s
 	if s is not None:
-		for Part in GroupKeywords:
+		for Part in getGroupKeywords():
 			processedString = removePartAndAfter(processedString,Part)
 	return processedString
 	
@@ -313,7 +324,7 @@ def storyArc_cleanup(storyarc):
 	#print "StoryArc before clean up == |" + storyarc + "|"
 	#clean up possible StoryArc 
 	#remove left over "Part" from books like "Arc Part 1" "Arc Part 2"
-	for Part in GroupKeywords:
+	for Part in getGroupKeywords():
 		storyarc = storyarc.replace(" " + Part, "")
 		storyarc = storyarc.replace("(" + Part, "")
 	
