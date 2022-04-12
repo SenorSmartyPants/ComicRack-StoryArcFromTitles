@@ -70,7 +70,7 @@ def SingleStoryArcFromTitles(books):
 		#overwrite if checked or number is empty
 		if result != 0:
 			for book in books:		
-				ProcessAlternateSeries(book,storyarc,result == 2, settings["field"])
+				ProcessAlternateSeries(book, book.Title, storyarc,result == 2, settings["field"], False)
 #end SingleStoryArcFromTitles
 
 
