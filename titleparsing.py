@@ -41,7 +41,7 @@ def SingleStoryArcFromTitleArray(titleArray):
 
 
 
-def ProcessAlternateSeries(book,storyarc,overwrite,field,clearNumber):
+def ProcessAlternateSeries(book,storyarcTitle,storyarc,overwrite,field,clearNumber):
 	# if there is an alternate series and it is the same as the storyarc name, set alternate series number
 	# find number after the groupkeyword, chapter/part number
 	# clearNumber is used when there are multiple AS for a book
@@ -63,7 +63,7 @@ def ProcessAlternateSeries(book,storyarc,overwrite,field,clearNumber):
 					book.StoryArc = storyarc
 		else:
 			#don't put found story arc in storyarc field since it is really an alternate series
-			AlternateSeriesNumberHandling(book,storyarc,overwrite)
+			AlternateSeriesNumberHandling(book,storyarcTitle,storyarc,overwrite)
 			if clearNumber:
 				book.AlternateNumber = None
 
@@ -82,7 +82,7 @@ def ProcessAlternateSeries(book,storyarc,overwrite,field,clearNumber):
 		# SA == AS // process number
 		if len(storyarc) > 0:
 			if storyarc == book.AlternateSeries:
-				AlternateSeriesNumberHandling(book,storyarc,overwrite)
+				AlternateSeriesNumberHandling(book,storyarcTitle,storyarc,overwrite)
 			if clearNumber:
 				book.AlternateNumber = None
 
@@ -95,11 +95,11 @@ def RemoveStoryArcFromAlternateSeries(book,storyarc,overwrite):
 		book.AlternateSeries = book.AlternateSeries.replace(storyarc,"").strip(' ,-(:;')
 #end RemoveStoryArcFromAlternateSeries
 	
-def AlternateSeriesNumberHandling(book,storyarc,overwrite):
+def AlternateSeriesNumberHandling(book,storyarctitle,storyarc,overwrite):
 	#find a part number if it exists
 	if len(book.AlternateSeries) > 0:
 		#remove story arc from title
-		PartNumber = book.Title.replace(storyarc,"").strip().lstrip(',-(:;').strip()
+		PartNumber = storyarctitle.replace(storyarc,"").strip().lstrip(',-(:;').strip()
 		#MessageBox.Show(PartNumber)
 		#remove group keyword, if it exists find first word after it. 
 		for Part in getGroupKeywords():
@@ -163,6 +163,12 @@ def text2int(textnum, numwords={}):
 def remove_prefix(s, prefix):
     return s[len(prefix):] if s.startswith(prefix) else s
 
+def stripTitle(title):
+	title.strip()
+	if config.settings["StripLeadingThe"] == 'True':
+		title = remove_prefix(title, "The ")
+	return title
+
 def makeTitleArray(books):
 	titleArray = []
 	for book in books:
@@ -173,10 +179,7 @@ def makeTitleArray(books):
 		#split titles on semicolon
 		splitTitle = book.Title.split(";")
 		for	title in splitTitle:
-			title.strip()
-			if config.settings["StripLeadingThe"] == 'True':
-				title = remove_prefix(title, "The ")
-			titleArray.append(title)
+			titleArray.append(stripTitle(title))
 		
 	
 	print(titleArray)
