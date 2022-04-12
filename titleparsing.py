@@ -160,7 +160,8 @@ def text2int(textnum, numwords={}):
 	return result + current
 	
 
-
+def remove_prefix(s, prefix):
+    return s[len(prefix):] if s.startswith(prefix) else s
 
 def makeTitleArray(books):
 	titleArray = []
@@ -172,6 +173,9 @@ def makeTitleArray(books):
 		#split titles on semicolon
 		splitTitle = book.Title.split(";")
 		for	title in splitTitle:
+			title.strip()
+			if config.settings["StripLeadingThe"] == 'True':
+				title = remove_prefix(title, "The ")
 			titleArray.append(title)
 		
 	

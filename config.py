@@ -20,19 +20,20 @@ def StoryArcFromTitlesOptions():
 	global settings
 	LoadSettings()
 
-	optionform = OptionsForm(settings["field"])
+	optionform = OptionsForm(settings)
 
 	result = optionform.ShowDialog()
 
 	if result == DialogResult.OK:
 		settings["field"] = optionform._cblMethod.Text
+		settings["GroupKeywordColon"] = "True" if optionform._chkColon.Checked else "False"
+		settings["StripLeadingThe"] = "True" if optionform._chkStripLeadingThe.Checked else "False"
 		SaveSettings(settings)
 
 def LoadSettings():
 	global settings
     #Define some default settings
-	print("loading settings")
-	settings = {"field" : "Story Arc", "GroupKeywordColon" : "True"}
+	settings = {"field" : "Story Arc", "GroupKeywordColon" : "True", "StripLeadingThe" : "False"}
 
     #The settings file should be formated with each line as SettingName:Value. eg Prefix:Scanner:
 	try:
@@ -53,9 +54,11 @@ def SaveSettings(settings):
             settingsfile.write(setting + ":" + settings[setting] + "\n")
 
 class OptionsForm(Form):
-	def __init__(self, field):
+	def __init__(self, settings):
 		self.InitializeComponent()
-		self._cblMethod.Text = field
+		self._cblMethod.Text = settings["field"]
+		self._chkColon.Checked = settings["GroupKeywordColon"] == 'True'
+		self._chkStripLeadingThe.Checked = settings["StripLeadingThe"] == 'True'
 	
 	def InitializeComponent(self):
 		self._cblMethod = System.Windows.Forms.ComboBox()
@@ -63,6 +66,8 @@ class OptionsForm(Form):
 		self._lblInstructions = System.Windows.Forms.Label()
 		self._btnContinue = System.Windows.Forms.Button()
 		self._btnCancel = System.Windows.Forms.Button()
+		self._chkColon = System.Windows.Forms.CheckBox()
+		self._chkStripLeadingThe = System.Windows.Forms.CheckBox()
 		self.SuspendLayout()
 		# 
 		# cblMethod
@@ -76,6 +81,27 @@ class OptionsForm(Form):
 		self._cblMethod.Name = "cblMethod"
 		self._cblMethod.Size = System.Drawing.Size(300, 21)
 		self._cblMethod.TabIndex = 0
+
+		# 
+		# chkColon
+		# 
+		self._chkColon.AutoCheck = True
+		self._chkColon.Location = System.Drawing.Point(12, 60)
+		self._chkColon.Name = "chkColon"
+		self._chkColon.Size = System.Drawing.Size(300, 21)
+		self._chkColon.TabIndex = 1
+		self._chkColon.Text = "End Story Arc at colon (:)?"
+
+		# 
+		# chkColon
+		# 
+		self._chkStripLeadingThe.AutoCheck = True
+		self._chkStripLeadingThe.Location = System.Drawing.Point(12, 81)
+		self._chkStripLeadingThe.Name = "chkColon"
+		self._chkStripLeadingThe.Size = System.Drawing.Size(300, 21)
+		self._chkStripLeadingThe.TabIndex = 1
+		self._chkStripLeadingThe.Text = "Strip leading The from story arc"
+
 		# 
 		# lblInstructions
 		# 
@@ -88,7 +114,7 @@ class OptionsForm(Form):
 		# btnContinue
 		# 
 		self._btnContinue.DialogResult = System.Windows.Forms.DialogResult.OK
-		self._btnContinue.Location = System.Drawing.Point(156, 70)
+		self._btnContinue.Location = System.Drawing.Point(156, 101)
 		self._btnContinue.Name = "btnContinue"
 		self._btnContinue.Size = System.Drawing.Size(75, 23)
 		self._btnContinue.TabIndex = 0
@@ -99,7 +125,7 @@ class OptionsForm(Form):
 		# btnCancel
 		# 
 		self._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		self._btnCancel.Location = System.Drawing.Point(237, 70)
+		self._btnCancel.Location = System.Drawing.Point(237, 101)
 		self._btnCancel.Name = "btnCancel"
 		self._btnCancel.Size = System.Drawing.Size(75, 23)
 		self._btnCancel.TabIndex = 4
@@ -111,12 +137,14 @@ class OptionsForm(Form):
 		# 
 		self.AcceptButton = self._btnContinue
 		self.CancelButton = self._btnCancel
-		self.ClientSize = System.Drawing.Size(336, 104)
+		self.ClientSize = System.Drawing.Size(336, 135)
 		self.Controls.Add(self._btnCancel)
 		self.Controls.Add(self._btnContinue)
 		self.Controls.Add(self._lblInstructions)
 		self.Controls.Add(self._lblDescription)
 		self.Controls.Add(self._cblMethod)
+		self.Controls.Add(self._chkColon)
+		self.Controls.Add(self._chkStripLeadingThe)
 		self.MaximizeBox = False
 		self.MinimizeBox = False
 		self.Name = "OptionsForm"
