@@ -14,6 +14,12 @@ import System.Windows.Forms
 from System.Drawing import *
 from System.Windows.Forms import *
 
+from System.IO import FileInfo
+
+#Some important constants
+FOLDER = FileInfo(__file__).DirectoryName + "\\"
+ICON = FOLDER + "StoryArcFromTitles.ico"
+
 class MethodForm(Form):
 	def __init__(self):
 		self.InitializeComponent()
@@ -92,6 +98,7 @@ class MethodForm(Form):
 		self.Name = "MethodForm"
 		self.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		self.Text = "Story Arc from Titles"
+		self.Icon = System.Drawing.Icon(ICON)
 		self.Load += self.MainFormLoad
 		self.ResumeLayout(False)
 
