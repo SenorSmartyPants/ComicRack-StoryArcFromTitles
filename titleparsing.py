@@ -30,9 +30,12 @@ def SingleStoryArcFromTitleArray(titleArray):
 
 
 
-def ProcessAlternateSeries(book,storyarc,overwrite,field):
+def ProcessAlternateSeries(book,storyarc,overwrite,field,clearNumber):
 	# if there is an alternate series and it is the same as the storyarc name, set alternate series number
 	# find number after the groupkeyword, chapter/part number
+	# clearNumber is used when there are multiple AS for a book
+	# otherwise AS# will be set to part number for first SA detected
+
 	lstoryarc = storyarc.lower()
 	if book.AlternateSeries is not None:
 		lAlternateSeries = book.AlternateSeries.lower()
@@ -49,8 +52,10 @@ def ProcessAlternateSeries(book,storyarc,overwrite,field):
 					book.StoryArc = storyarc
 		else:
 			#don't put found story arc in storyarc field since it is really an alternate series
-			#TODO: check title again for another story arc?
 			AlternateSeriesNumberHandling(book,storyarc,overwrite)
+			if clearNumber:
+				book.AlternateNumber = None
+
 	else:
 		#save the found story arc in AlternateSeries
 		#possibilities
@@ -64,8 +69,11 @@ def ProcessAlternateSeries(book,storyarc,overwrite,field):
 			book.AlternateSeries = book.AlternateSeries + ', ' + storyarc
 
 		# SA == AS // process number
-		if len(storyarc) > 0 and storyarc == book.AlternateSeries:
-			AlternateSeriesNumberHandling(book,storyarc,overwrite)
+		if len(storyarc) > 0:
+			if storyarc == book.AlternateSeries:
+				AlternateSeriesNumberHandling(book,storyarc,overwrite)
+			if clearNumber:
+				book.AlternateNumber = None
 
 #end ProcessAlternateSeries
 
@@ -149,7 +157,12 @@ def makeTitleArray(books):
 		#print "%s V%d #%s" % (book.Series , book.Volume , book.Number)
 		#print book.Title
 		#print book.StoryArc
-		titleArray.append(book.Title)
+
+		#split titles on semicolon
+		splitTitle = book.Title.split(";")
+		for	title in splitTitle:
+			titleArray.append(title)
+		
 	
 	print(titleArray)
 	

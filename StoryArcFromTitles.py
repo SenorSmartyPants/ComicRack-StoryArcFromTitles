@@ -104,10 +104,14 @@ def MultipleStoryArcsFromTitles(books,method_selected):
 			#update books
 			for book in books:
 				storyarc = ""
-				if inv.has_key(book.Title):
-					storyarc = inv[book.Title]
+				arcsFound = 0
+				splitTitle = book.Title.split(";")
+				for	title in splitTitle:
+					if inv.has_key(title):
+						arcsFound += 1
+						storyarc = inv[title]
+						ProcessAlternateSeries(book,storyarc,result == 2, settings["field"], arcsFound > 1)
 
-				ProcessAlternateSeries(book,storyarc,result == 2, settings["field"])
 #end MultipleStoryArcsFromTitles
 
 #Some important constants
