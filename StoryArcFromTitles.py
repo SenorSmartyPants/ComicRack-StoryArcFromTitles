@@ -26,18 +26,11 @@ from titleparsing import *
 #@Image StoryArcFromTitles.png
 #@Key StoryArcFromTitles
 def StoryArcFromTitles(books):
-	global settings
-	settings = config.LoadSettings()
+	config.LoadSettings()
 	#test to make sure there is more than one book
 	if len(books) == 0:
 		MessageBox.Show("You must select at least 1 book to run this script", "Story Arc From Titles", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
-	elif len(books) == 1:
-		#MessageBox.Show("You must select at least 2 books to run this script", "Story Arc From Titles", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-		
-		#single story arc mode - only one book
-		SingleStoryArcFromTitles(books)
-	
 	else:
 		method_form = MethodForm()
 		if (method_form.ShowDialog() == DialogResult.OK):
@@ -51,10 +44,9 @@ def StoryArcFromTitles(books):
 				SingleStoryArcFromTitles(books)
 
 def SingleStoryArcFromTitles(books):
-	global settings
 	titleArray = makeTitleArray(books)
 	storyarc = SingleStoryArcFromTitleArray(titleArray, len(books))
-	
+
 	if len(storyarc) == 0:
 		MessageBox.Show("No Story Arcs detected.", "Story Arc From Titles", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 	else:
@@ -69,13 +61,12 @@ def SingleStoryArcFromTitles(books):
 
 		#overwrite if checked or number is empty
 		if result != 0:
-			for book in books:		
-				ProcessAlternateSeries(book, book.Title, storyarc,result == 2, settings["field"], False)
+			for book in books:
+				ProcessAlternateSeries(book, book.Title, storyarc,result == 2, config.settings["field"], False)
 #end SingleStoryArcFromTitles
 
 
 def MultipleStoryArcsFromTitles(books,method_selected):
-	global settings
 	titleArray = makeTitleArray(books)
 	storyarcs = prefix_groups(titleArray,method_selected)
 
@@ -87,29 +78,10 @@ def MultipleStoryArcsFromTitles(books,method_selected):
 
 		#overwrite if checked or number is empty
 		if result != 0:
-			
+
 			#invert dictionary, so book title is now the key, story arc the value
-			inv = {}
-			for k, v in storyarcs.iteritems():
-				if k != NoStoryArcKey:
-					#print k
-					for title in v:
-						#print title
-						inv[title] = k
-			
-			#print inv
-			
-			#update books
-			for book in books:
-				storyarc = ""
-				arcsFound = 0
-				splitTitle = book.Title.split(";")
-				for	title in splitTitle:
-					strippedTitle = stripTitle(title)
-					if inv.has_key(strippedTitle):
-						arcsFound += 1
-						storyarc = inv[strippedTitle]
-						ProcessAlternateSeries(book, title, storyarc,result == 2, settings["field"], arcsFound > 1)
+			inv = InvertDictionary(storyarcs)
+			updateBooksAlternateSeries(books, inv, result == 2)
 
 #end MultipleStoryArcsFromTitles
 

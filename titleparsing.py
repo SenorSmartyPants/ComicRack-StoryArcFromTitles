@@ -9,10 +9,6 @@ SingleStoryArcMinimumLength = 2
 import config
 
 def getGroupKeywords():
-	#global config.settings = config.LoadSettings()
-	
-	#TODO option to not split on colon
-	# option to strip 'The' from detected story arc
 	GroupKeywords = ["Part","Chapter","Pt.","Pt","Prelude","Conclusion"]
 	GroupKeywordColon = ": "
 
@@ -36,10 +32,33 @@ def SingleStoryArcFromTitleArray(titleArray, bookCount):
 	#endif
 	if len(storyarc) < SingleStoryArcMinimumLength:
 		storyarc = ""
-	
+
 	return storyArc_cleanup(storyarc)
 
+def InvertDictionary(dict):
+	inv = {}
+	for k, v in dict.items():
+		if k != NoStoryArcKey:
+			#print k
+			for title in v:
+				#print title
+				inv[title] = k
 
+	#print(inv)
+	return inv
+
+def updateBooksAlternateSeries(books, inv, overwrite):
+    #update books
+	for book in books:
+		storyarc = ""
+		arcsFound = 0
+		splitTitle = book.Title.split(";")
+		for	title in splitTitle:
+			strippedTitle = stripTitle(title)
+			if inv.has_key(strippedTitle):
+				arcsFound += 1
+				storyarc = inv[strippedTitle]
+				ProcessAlternateSeries(book, title, storyarc, overwrite, config.settings["field"], arcsFound > 1)
 
 def ProcessAlternateSeries(book,storyarcTitle,storyarc,overwrite,field,clearNumber):
 	# if there is an alternate series and it is the same as the storyarc name, set alternate series number
@@ -164,7 +183,7 @@ def remove_prefix(s, prefix):
     return s[len(prefix):] if s.startswith(prefix) else s
 
 def stripTitle(title):
-	title.strip()
+	title = title.strip()
 	if config.settings["StripLeadingThe"] == 'True':
 		title = remove_prefix(title, "The ")
 	return title
@@ -181,9 +200,6 @@ def makeTitleArray(books):
 		for	title in splitTitle:
 			titleArray.append(stripTitle(title))
 		
-	
-	print(titleArray)
-	
 	return titleArray		
 
 #http://stackoverflow.com/questions/2892931/longest-common-substring-from-more-than-two-strings-python
