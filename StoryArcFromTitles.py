@@ -1,13 +1,13 @@
 # StoryArcFromTitles.py
 #
-# Attempts to parse Titles to find Story Arc Info 
-# 
+# Attempts to parse Titles to find Story Arc Info
+#
 #
 # You are free to modify and distribute this file
 ##########################################################################
 
 import clr, re
-import System 
+import System
 
 clr.AddReference("System.Windows.Forms")
 clr.AddReference("System.Drawing")
@@ -55,8 +55,8 @@ def SingleStoryArcFromTitles(books):
 		#1 is unchecked
 		#2 is checked
 		result = ComicRack.App.AskQuestion (
-			ComicRack.Localize("StoryArcFromTitles", "Ask", "Possible Story Arc detected.\n" + storyarc + "\n\nDo you want to update selected books with the detected Story Arc?"), 
-			ComicRack.Localize("StoryArcFromTitles", "Continue", "Continue"), 
+			ComicRack.Localize("StoryArcFromTitles", "Ask", "Possible Story Arc detected.\n" + storyarc + "\n\nDo you want to update selected books with the detected Story Arc?"),
+			ComicRack.Localize("StoryArcFromTitles", "Continue", "Continue"),
 			ComicRack.Localize("StoryArcFromTitles", "Overwrite", "&Overwrite existing story arcs"))
 
 		#overwrite if checked or number is empty
@@ -72,8 +72,8 @@ def MultipleStoryArcsFromTitles(books,method_selected):
 
 	if storyarcs:
 		result = ComicRack.App.AskQuestion (
-				ComicRack.Localize("StoryArcsFromTitles", "Ask", "Results of Story Arc scan\n" + formatDict(storyarcs)), 
-				ComicRack.Localize("StoryArcsFromTitles", "Continue", "Continue"), 
+				ComicRack.Localize("StoryArcsFromTitles", "Ask", "Results of Story Arc scan\n" + formatDict(storyarcs)),
+				ComicRack.Localize("StoryArcsFromTitles", "Continue", "Continue"),
 				ComicRack.Localize("StoryArcsFromTitles", "Overwrite", "&Overwrite existing story arcs"))
 
 		#overwrite if checked or number is empty

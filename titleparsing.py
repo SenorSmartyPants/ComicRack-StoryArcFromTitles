@@ -1,9 +1,9 @@
-# Attempts to parse Titles to find Story Arc Info 
-# 
+# Attempts to parse Titles to find Story Arc Info
+#
 # You are free to modify and distribute this file
 ##########################################################################
 NoStoryArcKey = "---***No Story Arc Found***---"
-StoryArcMinimumLength = 6 # seems to be off by one... 
+StoryArcMinimumLength = 6 # seems to be off by one...
 SingleStoryArcMinimumLength = 2
 
 import config
@@ -120,7 +120,7 @@ def AlternateSeriesNumberHandling(book,storyarctitle,storyarc,overwrite):
 		#remove story arc from title
 		PartNumber = storyarctitle.replace(storyarc,"").strip().lstrip(',-(:;').strip()
 		#MessageBox.Show(PartNumber)
-		#remove group keyword, if it exists find first word after it. 
+		#remove group keyword, if it exists find first word after it.
 		for Part in getGroupKeywords():
 			PartNumber = PartNumber.replace("(" + Part, " ")
 			PartNumber = PartNumber.replace(Part, " ")
@@ -146,7 +146,7 @@ def AlternateSeriesNumberHandling(book,storyarctitle,storyarc,overwrite):
 
 def text2int(textnum, numwords={}):
 	textnum = textnum.lower()
-	
+
 	if not numwords:
 		units = [
 		"zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
@@ -177,7 +177,7 @@ def text2int(textnum, numwords={}):
 			current = 0
 
 	return result + current
-	
+
 
 def remove_prefix(s, prefix):
     return s[len(prefix):] if s.startswith(prefix) else s
@@ -200,7 +200,7 @@ def makeTitleArray(books):
 		for	title in splitTitle:
 			titleArray.append(stripTitle(title))
 		
-	return titleArray		
+	return titleArray
 
 #http://stackoverflow.com/questions/2892931/longest-common-substring-from-more-than-two-strings-python
 # this does not increase asymptotical complexity
@@ -223,30 +223,30 @@ def long_substr(strings):
 			if all(candidate.lower() in text.lower() for text in strings):
 				substr = candidate
 	return substr
-	
+
 def prefix_groups(data,method):
 	"""Return a dictionary of {prefix:[items]}."""
 	lines = data[:]
 	groups = dict()
 	groups[NoStoryArcKey] = list()
-	
-	
+
+
 	if method == 0:
 		#remove part and everything after it from title
-		removeP = removeGroupKeywordsAndAfter 
+		removeP = removeGroupKeywordsAndAfter
 	elif method == 1:
 		#use alternate Part removal, only remove the word Part from Title
 		removeP = removeGroupKeywords
 	else:
 		#shouldn't call if method is not 0 or 1
 		return
-		
-				
+
+
 	while lines:
 		longest = None
 		first = lines.pop()
-		
-		
+
+
 		firstNoPart = removeP(first)
 
 		for line in lines:
@@ -298,15 +298,15 @@ def formatDict(dictionary):
 		for item in v:
 			output += "\t   " + item + "\n"
 		output += "\n"
-	
+
 	return output
-	
+
 def removeGroupKeywords(s):
 	processedString = s
 	for Part in getGroupKeywords():
 		processedString = removePart(processedString,Part)
 	return processedString
-	
+
 def removePart(s,keyword):
 	#don't add spaces if already space in keyword
 	if keyword.find(" ") == -1:
@@ -325,7 +325,7 @@ def removeGroupKeywordsAndAfter(s):
 		for Part in getGroupKeywords():
 			processedString = removePartAndAfter(processedString,Part)
 	return processedString
-	
+
 def removePartAndAfter(s,keyword):
 	#don't add spaces if already space in keyword
 	if keyword.find(" ") == -1:
@@ -340,21 +340,21 @@ def removePartAndAfter(s,keyword):
 
 def storyArc_cleanup(storyarc):
 	#print "StoryArc before clean up == |" + storyarc + "|"
-	#clean up possible StoryArc 
+	#clean up possible StoryArc
 	#remove left over "Part" from books like "Arc Part 1" "Arc Part 2"
 	for Part in getGroupKeywords():
 		storyarc = storyarc.replace(" " + Part, "")
 		storyarc = storyarc.replace("(" + Part, "")
-	
+
 	#remove whitespace from start and end of string
 	storyarc = storyarc.strip()
-	
+
 	#remove trailing commas - and ( :
 	storyarc = storyarc.rstrip(',-(:')
-	
+
 	#remove semi-colon. Used as Story title delimiter
 	storyarc = storyarc.strip(';')
-	
+
 	#remove whitespace from start and end of string, again
 	storyarc = storyarc.strip()
 	#print "StoryArc after clean up == |" + storyarc + "|"
