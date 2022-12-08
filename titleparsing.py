@@ -91,7 +91,7 @@ def ProcessAlternateSeries(book,storyarcTitle,storyarc,overwrite,field,clearNumb
 		#possibilities
 		# SA IN AS // do nothing
 		# overwrite or empty AS //set and process number
-		if overwrite or book.AlternateSeries == "":
+		if (overwrite and not clearNumber) or book.AlternateSeries == "":
 			if len(storyarc) > 0:
 				book.AlternateSeries = storyarc
 		elif lAlternateSeries.find(lstoryarc) == -1:
