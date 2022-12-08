@@ -9,7 +9,7 @@ SingleStoryArcMinimumLength = 2
 import config
 
 def getGroupKeywords():
-	GroupKeywords = ["Part","Chapter","Pt.","Pt","Prelude","Conclusion"]
+	GroupKeywords = ["Part","Chapter","Pt.","Pt"," Prelude"," Conclusion"," Finale"]
 	GroupKeywordColon = ": "
 
 	if config.settings["GroupKeywordColon"] == 'True':
